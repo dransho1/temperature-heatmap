@@ -1,0 +1,9 @@
+{% if sensor_list %}
+    <ul>
+    {% for sensor in sensor_list %}
+        <li><a href="/temp/{{ sensor.id }}/">{{ sensor.sensor_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No Sensors are available.</p>
+{% endif %}
