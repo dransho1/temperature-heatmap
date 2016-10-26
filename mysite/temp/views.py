@@ -15,7 +15,9 @@ def index(request):
         'sensor_list': sensor_list,
     }
 
-    
+    ########################################
+    # sending authorization and getting keys
+
     #prepare dictionary
     auth = {"email": "chris.carper@atelierten.com", "password": "A10green"}
 
@@ -33,11 +35,26 @@ def index(request):
 
     #make request for data
     #this specific request would take the last ten results from chart 93
-    req = requests.get('https://cloud.kierantimberlake.com/pointelist/api/samples?chart=93&last=10',
+    req = requests.get('https://cloud.kierantimberlake.com/pointelist/api/samples?chart=1&last=10',
             headers={'content-type': 'application/json', 'cookie': "token=" + json_load['token']})
 
     #convert from json
-    #load = req.json()
+    load = req.json()
     
+    ######################################
+    # parse the data, and establish sensors and feeds
+
+    ######################################
+    # 
+
+    
+
+
+
+
+
+
+
+
 
     return HttpResponse(template.render(context, request))
