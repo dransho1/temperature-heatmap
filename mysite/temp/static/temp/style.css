@@ -1,0 +1,9 @@
+li a {
+    color: green;
+}
+
+div {
+	height: 500px;
+	width: 1200px;
+    background: white url("images/a10zoom.png") no-repeat center;
+}

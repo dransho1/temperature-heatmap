@@ -1,9 +1,30 @@
-{% if sensor_list %}
-    <ul>
-    {% for sensor in sensor_list %}
-        <li><a href="/temp/{{ sensor.id }}/">{{ sensor.sensor_name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No Sensors are available.</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+{% load static %}
+	<head>
+		<link rel="stylesheet" type="text/css" href="{% static 'temp/style.css' %}" />
+	</head>
+	<body>
+		<h1>Atelier Ten Floorplan Temperature Heatmap</h1>
+		{% if sensor_list %}
+		    <ul>
+		    {% for sensor in sensor_list %}
+		        <li>{{ sensor.sensor_name }}</li>
+		    {% endfor %}
+		    </ul>
+		{% else %}
+		    <p>No Sensors are available.</p>
+		{% endif %}
+		<div>
+			<!-- within this div we have all the active scroll-over
+			components for the web app. -->
+			<!--<img src="images/a10fp.png">-->
+		</div>
+	</body>
+
+<html>
+
+
+<!-- <a href="/temp/{{ sensor.id }}/"> 
+
+url("images/a10fp.png") no-repeat -->	
