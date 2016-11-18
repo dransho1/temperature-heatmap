@@ -1,10 +1,13 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
 {% load static %}
 	<head>
 		<link rel="stylesheet" type="text/css" href="{% static 'temp/style.css' %}" />
-		<script type="text/javascript" src="{% static 'temp/d3.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'temp/d3-floorplan/d3.floorplan.min.js' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'temp/d3-floorplan/d3.floorplan.css' %}" />
+		<script src="http://d3js.org/d3.v3.js"></script>
+		<script src="{% static 'temp/d3-floorplan/d3.floorplan.min.js' %}"></script>
+		<!--<script src="{% static 'temp/fp.js' %}"></script>-->
 	</head>
 	<body>
 		<h1>Atelier Ten Floorplan Temperature Heatmap</h1>
@@ -18,68 +21,10 @@
 		    <p>No Sensors are available.</p>
 		{% endif %}
 		<script>
-			var jsonData = {
-			"heatmap": {
-				"binSize": 3,
-				"units": "\u00B0C",
-				"map": [
-					{"x": 21, "y": 12, "value": 20.2},
-					{"x": 24, "y": 12, "value": 19.9},
-					{"x": 27, "y": 12, "value": 19.7},
-					{"x": 30, "y": 12, "value": 19.7},
-					{"x": 21, "y": 15, "value": 20.5},
-					{"x": 24, "y": 15, "value": 19.3},
-					{"x": 27, "y": 15, "value": 19.4},
-					{"x": 30, "y": 15, "value": 19.9},
-					{"value": 19.9, "points": [{"x":2.513888888888882,"y":8.0},
-											   {"x":6.069444444444433,"y":8.0},
-											   {"x":6.069444444444434,"y":5.277535934291582},
-											   {"x":8.20833333333332,"y":2.208151950718685},
-											   {"x":13.958333333333323,"y":2.208151950718685},
-											   {"x":16.277777777777825,"y":5.277535934291582},
-											   {"x":16.277777777777803,"y":10.08151950718685},
-											   {"x":17.20833333333337,"y":10.012135523613962},
-											   {"x":17.27777777777782,"y":18.1387679671458},
-											   {"x":2.513888888888882,"y":18.0}]}]
-				},
-			"overlays": {
-				"polygons": [
-					{"id": "p1", "name": "kitchen", "points": [{"x":2.513888888888882,"y":8.0},
-															   {"x":6.069444444444433,"y":8.0},
-															   {"x":6.069444444444434,"y":5.277535934291582},
-															   {"x":8.20833333333332,"y":2.208151950718685},
-															   {"x":13.958333333333323,"y":2.208151950718685},
-															   {"x":16.277777777777825,"y":5.277535934291582},
-															   {"x":16.277777777777803,"y":10.08151950718685},
-															   {"x":17.20833333333337,"y":10.012135523613962},
-															   {"x":17.27777777777782,"y":18.1387679671458},
-															   {"x":2.513888888888882,"y":18.0}]}
-					]
-				},
-			"vectorfield": {
-				"binSize": 3,
-				"units": "ft/s",
-				"map": [
-					{"x": 18, "y": 21, "value": {"x": 4, "y": 3}},
-					{"x": 21, "y": 21, "value": {"x": 3, "y": 3}},
-					{"x": 18, "y": 24, "value": {"x": 1, "y": 2}},
-					{"x": 21, "y": 24, "value": {"x": -3, "y": 4}},
-					{"x": 24, "y": 24, "value": {"x": -4, "y": 1}}]
-				},
-			"pathplot": [{
-				"id": "flt-1",
-				"classes": "planned",
-				"points": [{"x": 23.8, "y": 30.6},{"x": 19.5, "y": 25.7},{"x": 14.5, "y": 25.7},{"x": 13.2, "y": 12.3}]
-				}]
-			};
-		</script>
-		<div id="demo"></div>
-		<script>
-			//console.log(jsonData)  // correct
-			var xscale = d3.scaleLinear()
+			var xscale = d3.scale.linear()
 			               .domain([0,50.0])
 			               .range([0,720]),
-			    yscale = d3.scaleLinear()
+			    yscale = d3.scale.linear()
 			               .domain([0,33.79])
 			               .range([0,487]),
 			    map = d3.floorplan()
@@ -106,23 +51,21 @@
 			   .addLayer(pathplot)
 			   .addLayer(overlays);
 
-			//ex = d3.json(jsonData); // not working reading in data
-			//console.log(ex)
-			//console.log(ex.heatmap)
-
-			var data = {"heatmap":"json"}
-
-			d3.json(data, function(data) {  // error reading data!!
-			   	mapdata[heatmap.id()] = data.heatmap;    // error on data.heatmap, data is null
-			   	mapdata[overlays.id()] = data.overlays;
-			   	mapdata[vectorfield.id()] = data.vectorfield;
-			   	mapdata[pathplot.id()] = data.pathplot;
+			d3.json("{% url 'getdat' %}", function(err, data){
+			  if(err) console.log("error fetching data");
+			  console.log(data)
+			  mapdata[heatmap.id()] = data[0].heatmap;  
+			  console.log(data[0].heatmap)  
+			  mapdata[overlays.id()] = data[1].overlays;
+			  mapdata[vectorfield.id()] = data[2].vectorfield;
+			  mapdata[pathplot.id()] = data[3].pathplot;
 			   	
 			   	d3.select("#demo").append("svg")
 			   		.attr("height", 487).attr("width",720)
 			   		.datum(mapdata).call(map);
 			});
 		</script>
+		<div id="demo"></div>
 	</body>
 
 <html>
@@ -181,8 +124,3 @@ var loadData = function(data) {
    };
 
 loadData(jsonData);  // error here loading data
-
-
-
-
-					-->

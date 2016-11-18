@@ -1,7 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
-
 import json, requests
 
 from .models import Sensor, Feed
@@ -14,7 +13,23 @@ def index(request):
     context = {
         'sensor_list': sensor_list,
     }
+    output = "test"
+    return render(request, 'temp/index.html', context)
 
+def getdat(request):
+    json_data = open('temp/static/temp/demodata.json')
+    print 'in getdat'
+    #data1 = json.load(json_data) # error here
+    hm = {}
+    ol = {}
+    vf = {}
+    pp = {}
+    print 'load data'
+    data = json.load(json_data)
+    print 'loaded data is: ', data
+
+    json_data.close()
+    return JsonResponse(data, safe=False)
     ########################################
     # sending authorization and getting keys
 
