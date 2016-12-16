@@ -10,22 +10,22 @@ This is a work in progress. Things to do include:
 
 ## File organization ##
 ```
-README.md /n
+README.md
 mysite/
-	manage.py       			<-- contains commands to run server
+	manage.py       					<-- contains commands to run server
 	dbsqlite3
-	mysite/						<-- contains internal Django settings
-	temp/						<-- web app files
-		views.py 				<-- webpage view
-		kt.py 					<-- calls API
-		models.py 				<-- app models
-		urls.py 				<-- url's for webpage views
+	mysite/								<-- contains internal Django settings
+	temp/								<-- web app files
+		views.py 						<-- webpage view
+		kt.py 							<-- calls API
+		models.py 						<-- app models
+		urls.py 						<-- url's for webpage views
 		static/
 			temp/
 				...css and js files
 				images/
-					fp.png 		<-- floorplan image
+					fp.png 				<-- floorplan image
 		templates/
 			temp/
-				index.html 		<-- html web app template
+				index.html 				<-- html web app template
 ```
