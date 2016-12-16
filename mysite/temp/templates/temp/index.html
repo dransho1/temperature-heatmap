@@ -1,126 +1,110 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<html>
-{% load static %}
-	<head>
-		<link rel="stylesheet" type="text/css" href="{% static 'temp/style.css' %}" />
-		<link rel="stylesheet" type="text/css" href="{% static 'temp/d3-floorplan/d3.floorplan.css' %}" />
-		<script src="http://d3js.org/d3.v3.js"></script>
-		<script src="{% static 'temp/d3-floorplan/d3.floorplan.min.js' %}"></script>
-		<!--<script src="{% static 'temp/fp.js' %}"></script>-->
-	</head>
-	<body>
-		<h1>Atelier Ten Floorplan Temperature Heatmap</h1>
-		{% if sensor_list %}
-		    <ul>
-		    {% for sensor in sensor_list %}
-		        <li>{{ sensor.sensor_name }}</li>
-		    {% endfor %}
-		    </ul>
-		{% else %}
-		    <p>No Sensors are available.</p>
-		{% endif %}
-		<script>
-			var xscale = d3.scale.linear()
-			               .domain([0,50.0])
-			               .range([0,720]),
-			    yscale = d3.scale.linear()
-			               .domain([0,33.79])
-			               .range([0,487]),
-			    map = d3.floorplan()
-			    	.xScale(xscale)
-			    	.yScale(yscale),
-			    imagelayer = d3.floorplan.imagelayer(),
-			    heatmap = d3.floorplan.heatmap(),
-			    vectorfield = d3.floorplan.vectorfield(),
-			    pathplot = d3.floorplan.pathplot(),
-			    overlays = d3.floorplan.overlays().editMode(true),
-			    mapdata = {};
+<html lang="en" ng-app>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-			mapdata[imagelayer.id()] = [{
-			    url: "http://dciarletta.github.io/d3-floorplan/Sample_Floorplan.jpg",
-			    x: 0,
-			    y: 0,
-			    height: 33.79,
-			    width: 50.0
-			     }];
+    {% load static %}
 
-			map.addLayer(imagelayer)
-			   .addLayer(heatmap)
-			   .addLayer(vectorfield)
-			   .addLayer(pathplot)
-			   .addLayer(overlays);
+    <link rel="icon" href="{% static 'temp/favicon.ico' %}" />
 
-			d3.json("{% url 'getdat' %}", function(err, data){
-			  if(err) console.log("error fetching data");
-			  console.log(data)
-			  mapdata[heatmap.id()] = data[0].heatmap;  
-			  console.log(data[0].heatmap)  
-			  mapdata[overlays.id()] = data[1].overlays;
-			  mapdata[vectorfield.id()] = data[2].vectorfield;
-			  mapdata[pathplot.id()] = data[3].pathplot;
-			   	
-			   	d3.select("#demo").append("svg")
-			   		.attr("height", 487).attr("width",720)
-			   		.datum(mapdata).call(map);
-			});
-		</script>
-		<div id="demo"></div>
-	</body>
+    <title>Atelier Ten Floorplan App</title>
 
-<html>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'temp/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="{% static 'temp/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{% static 'temp/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
 
+    <!-- Custom styles for this template -->
+    <link href="{% static 'temp/theme.css' %}" rel="stylesheet">
 
-<!-- <a href="/temp/{{ sensor.id }}/"> 
+    <!-- stylesheet for floorplan -->
+    <link href="{% static 'temp/floorplan.css' %}" rel="stylesheet">
 
-url("images/a10fp.png") no-repeat -->	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<!--
-var xscale = d3.scale.linear()
-               .domain([0,50.0])
-               .range([0,720]),
-    yscale = d3.scale.linear()
-               .domain([0,33.79])
-               .range([0,487]),
-    map = d3.floorplan().xScale(xscale).yScale(yscale),
-    imagelayer = d3.floorplan.imagelayer(),
-    heatmap = d3.floorplan.heatmap(),
-    vectorfield = d3.floorplan.vectorfield(),
-    pathplot = d3.floorplan.pathplot(),
-    overlays = d3.floorplan.overlays().editMode(true),
-    mapdata = {};
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{% static 'temp/ie-emulation-modes-warning.js' %}"></script>
 
-mapdata[imagelayer.id()] = [{
-    url: 'http://dciarletta.github.io/d3-floorplan/Sample_Floorplan.jpg',
-    x: 0,
-    y: 0,
-    height: 33.79,
-    width: 50.0
-     }];
+    <script src="{% static 'temp/tether.min.js' %}"></script>
 
-map.addLayer(imagelayer)
-   .addLayer(heatmap)
-   .addLayer(vectorfield)
-   .addLayer(pathplot)
-   .addLayer(overlays);
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
 
-var loadData = function(data) {
-   	mapdata[heatmap.id()] = data.heatmap;
-   	mapdata[overlays.id()] = data.overlays;
-   	mapdata[vectorfield.id()] = data.vectorfield;
-   	mapdata[pathplot.id()] = data.pathplot;
+  <body>
 
-   	//console.log(mapdata) // is not null
-   	console.log(map)   // is weird 
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://www.atelierten.com">Atelier Ten Website</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#jumbo">About</a></li>
+            <li><a href="#first">Floorplan</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
 
-   	var selection = d3.select("#demo").append("svg")
-   		.attr("height", 487)
-   		.attr("width",720)
-   		.datum(mapdata)
-   			.call(map)   // doesn't like this, 
-   	console.log(selection)
-   	console.log(map)
-   	selection.call(data, "map");   // doesn't like this
-   };
+    <div id="jumbo" class="container theme-showcase" role="main">
 
-loadData(jsonData);  // error here loading data
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Atelier Ten NYC</h1>
+        <p>This is a showcase of the Pointelist temperature sensors distributed across the office and their API. Data is overlayed ont top of the A10NYC floorplan.</p>
+      </div>
+
+      <!-- need to center, shrink, and apply JS on top -->
+      <!-- need to center, shrink, and apply JS on top -->
+      <!-- need to center, shrink, and apply JS on top -->
+      <div id="first" class="page-header">
+        <h1>Floorplan</h1>
+      </div>
+
+      <div id="demo" class="floorplan" class="tooltip">
+        <!-- already has a background image, can add some functionality in here -->
+        <div id="d1" style="position:absolute; top:660px; left:175px; z-index:1">
+        	<a class="data" href="" data-toggle="popover" data-placement="left" title="Sensor A1" data-content="72.3 oF" data-trigger="hover">
+          		<canvas id="A1" width="120" height="120" style="border:1px solid #d3d3d3;">error lol
+          		</canvas>
+        	</a>
+    	</div>
+
+        <script>
+        	$(document).ready(function(){
+            	$('[data-toggle="popover"]').popover();   
+        	});
+        </script>
+      </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{% static 'temp/js/vendor/jquery.min.js' %}"><\/script>')</script>
+    <script src="{% static 'temp/bootstrap.min.js' %}"></script>
+    <!--<script src="../../assets/js/docs.min.js"></script>-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'temp/ie10-viewport-bug-workaround.js' %}"></script>
+  </body>
+</html>
