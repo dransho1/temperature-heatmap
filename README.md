@@ -9,24 +9,23 @@ This is a work in progress. Things to do include:
 * Adding a chart below floorplan to show all sensors together (in last X measurements)
 
 ## File organization ##
-
 ```
-1. README.md /n
-2. mysite/
-	1. manage.py       				<-- contains commands to run server
-	2. dbsqlite3
-	3. mysite/						<-- contains internal Django settings
-	4. temp/						<-- web app files
-		1. views.py 				<-- webpage view
-		2. kt.py 					<-- calls API
-		3. models.py 				<-- app models
-		4. urls.py 					<-- url's for webpage views
-		5. static/
-			1. temp/
-				1. ...css and js files
-				2. images/
-					1. fp.png 		<-- floorplan image
-		6. templates/
-			1. temp/
-				1. index.html 		<-- html web app template
+README.md /n
+mysite/
+	manage.py       			<-- contains commands to run server
+	dbsqlite3
+	mysite/						<-- contains internal Django settings
+	temp/						<-- web app files
+		views.py 				<-- webpage view
+		kt.py 					<-- calls API
+		models.py 				<-- app models
+		urls.py 				<-- url's for webpage views
+		static/
+			temp/
+				...css and js files
+				images/
+					fp.png 		<-- floorplan image
+		templates/
+			temp/
+				index.html 		<-- html web app template
 ```
