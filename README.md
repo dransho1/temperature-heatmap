@@ -10,7 +10,7 @@ This is a work in progress. Things to do include:
 
 ## File organization ##
 
-`README.md /n
+README.md /n
 mysite/
 	manage.py       			<-- contains commands to run server
 	dbsqlite3
@@ -27,4 +27,4 @@ mysite/
 					fp.png 		<-- floorplan image
 		templates/
 			temp/
-				index.html 		<-- html web app template`
+				index.html 		<-- html web app template
