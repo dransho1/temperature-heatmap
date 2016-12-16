@@ -10,7 +10,7 @@ This is a work in progress. Things to do include:
 
 ## File organization ##
 
-`README.md
+`README.md /n
 mysite/
 	manage.py       			<-- contains commands to run server
 	dbsqlite3
