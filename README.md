@@ -10,16 +10,17 @@ This is a work in progress. Things to do include:
 
 ## File organization ##
 
+```
 1. README.md /n
 2. mysite/
-	1. manage.py       			<-- contains commands to run server
+	1. manage.py       				<-- contains commands to run server
 	2. dbsqlite3
 	3. mysite/						<-- contains internal Django settings
 	4. temp/						<-- web app files
 		1. views.py 				<-- webpage view
 		2. kt.py 					<-- calls API
 		3. models.py 				<-- app models
-		4. urls.py 				<-- url's for webpage views
+		4. urls.py 					<-- url's for webpage views
 		5. static/
 			1. temp/
 				1. ...css and js files
@@ -28,3 +29,4 @@ This is a work in progress. Things to do include:
 		6. templates/
 			1. temp/
 				1. index.html 		<-- html web app template
+```
