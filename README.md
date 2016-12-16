@@ -10,8 +10,8 @@ This is a work in progress. Things to do include:
 
 ## File organization ##
 
-README.md /n
-mysite/
+1. README.md /n
+2. mysite/
 	manage.py       			<-- contains commands to run server
 	dbsqlite3
 	mysite/						<-- contains internal Django settings
